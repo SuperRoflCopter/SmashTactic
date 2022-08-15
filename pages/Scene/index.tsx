@@ -1,34 +1,49 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import React, { ReactElement, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
-import Character from '../Character'
+import { Canvas, useThree } from "@react-three/fiber";
+import React, { ReactElement, useEffect, useRef } from "react";
+import Block from "../Block";
+import { GameContext } from "../Context";
+import Wall from "../Wall";
 
-function Scene({ children }): ReactElement {
-    const size = 600
-    const [items, setItems] = useState<ReactElement[]>([])
-    const clickHandler = (e) => {
-        const x = (e.nativeEvent.offsetX - size/2)/65
-        const y = -(e.nativeEvent.offsetY - size/2)/65
+function Scene({ children }: any): ReactElement {
 
-        // let vector = new THREE.Vector3(10, 10, 10);
-        console.log(e, x, y)
-        console.log("screen", e.screenX,  e.screenY)
-        console.log("native", e.nativeEvent.offsetX,   e.nativeEvent.offsetY)
-        setItems(items => [...items, <Character key={Math.random()} position={[x,y,0]}  />])
+  const context = React.useContext(GameContext)
+
+  const buildBoard = () => {
+    const result = [];
+    for (let i = 0; i < 10; i++) {
+      for (let j = 0; j < 10; j++) {
+        result.push(<Block layers={0} position={[i, j, 0]} color={j%2 && i%2 || !(j%2) && !(i%2) ? "black": "white"} />)
+      }
     }
-
-    return (
-        <Canvas 
-            style={{border:"1px solid black", height:size, width:size}} 
-            onClick={clickHandler}
-        >
-            <ambientLight intensity={0.5} />
-            <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-            <pointLight position={[-10, -10, -10]} />
-            {children}
-            {items}
-        </Canvas>
-    )
+    return result;
   }
 
-  export default Scene
+  const buildWall = () => {
+    const result = [];
+    for (let i = -1; i < 11; i++) {
+        result.push(<Wall position={[i, -1, 0]} />)
+        result.push(<Wall position={[i, -1, 1]} />)
+
+        result.push(<Wall type="vertical" position={[-1, i, 0]} />)
+        result.push(<Wall type="vertical" position={[-1, i, 1]} />)
+
+        result.push(<Wall  type="vertical" position={[10, i, 0]} />)
+        result.push(<Wall  type="vertical" position={[10, i, 1]} />)
+
+        result.push(<Wall position={[i, 10, 0]} />)
+        result.push(<Wall position={[i, 10, 1]} />)
+    }
+    return result;
+  }
+
+  return (
+    <>
+          {children}
+          {context.enemies}
+          {buildBoard()}
+          {buildWall()}
+      </>
+  )
+}
+
+export default Scene;

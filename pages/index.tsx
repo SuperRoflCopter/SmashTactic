@@ -1,16 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, ReactElement } from 'react'
 import styles from '../styles/Home.module.css'
-import Scene from './Scene'
+import Canvas from './Canvas'
 import Character from './Character'
-import Enemy from './Enemy'
+import { GameContext, initialState } from './Context'
 
 const Home: NextPage = () => {
 
-  // useEffect({
-
-  // }, [])
+  const [enemies, setEnemies] = useState<ReactElement[]>([])
 
   return (
     <div className={styles.container}>
@@ -19,11 +17,11 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-      <Scene >
-        <Character position={[0, 0, 0]} />
-        <Enemy position={[1.2, 3, 0]} />
-        <Enemy position={[2, 3, 0]} />
-      </Scene>
+      <GameContext.Provider value={{...initialState, enemies, setEnemies}}>
+      <Canvas >
+        <Character position={[0, 0, 1]} />
+      </Canvas>
+      </GameContext.Provider>
       </main>
 
       <footer className={styles.footer}>
