@@ -1,41 +1,43 @@
-import { Canvas, useFrame, MeshProps } from '@react-three/fiber'
+import { useFrame, MeshProps, useThree } from '@react-three/fiber'
 import React, { ReactElement, useRef, useState } from 'react'
-import ReactDOM from 'react-dom'
 import { GameContext } from '../Context'
+import { useGLTF } from '@react-three/drei'
 
 function Enemy(props: MeshProps): ReactElement {
-    // This reference will give us direct access to the mesh
+    const { scene } = useThree()
+    
     const mesh = useRef<any>()
-    // Set up state for the hovered and active state
-    const [hovered, setHover] = useState(false)
-    const context = React.useContext(GameContext); 
-    // Rotate mesh every frame, this is outside of React without overhead
-  //   useFrame(() => (mesh.current.rotation.y += 0.03))
+    const { state:{ selectedBlock, enemies } } = React.useContext(GameContext); 
+    // useFrame(() => (mesh.current.rotation.y += 0.03))
     useFrame((state, delta) => { 
-      // console.log(state, delta, event)
-      // console.log(mesh.current.position.x, state.pointer.x, state.camera.position.x)
-      if(mesh.current.position.x > context.selectedBlock.x)
+      if(mesh.current.position.x > selectedBlock.x)
         mesh.current.position.x -= 0.01
-      if(mesh.current.position.x < context.selectedBlock.x)
+      if(mesh.current.position.x < selectedBlock.x)
         mesh.current.position.x += 0.01 
-      if(mesh.current.position.y > context.selectedBlock.y)
+      if(mesh.current.position.y > selectedBlock.y)
         mesh.current.position.y -= 0.01
-      if(mesh.current.position.y < context.selectedBlock.y)
+      if(mesh.current.position.y < selectedBlock.y)
         mesh.current.position.y += 0.01 
   })
 
+    // @ts-ignore 
+    const { nodes, materials } = useGLTF("/model/suzanne/suzanne.gltf");
+
     return (
-      <mesh
-        {...props}
-        ref={mesh}
-        scale={0.2}
-        layers={0}
-        onPointerOver={(event) => setHover(true)}
-        onPointerOut={(event) => setHover(false)}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color={"red"} />
-      </mesh>
+      <>
+      <group ref={mesh} {...props} dispose={null}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Suzanne.geometry}
+          material={nodes.Suzanne.material}
+          position={[0, 0.19, -0.04]}
+          scale={0.5}
+        />
+      </group>
+      </>
     )
   }
 
+  useGLTF.preload("/suzanne.gltf");
   export default Enemy

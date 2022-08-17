@@ -1,0 +1,11 @@
+Model Information:
+* title:	Skeleton
+* source:	https://sketchfab.com/3d-models/skeleton-a2225b26c7b74cd5b5bbeced1170cc09
+* author:	VitSh (https://sketchfab.com/VitSh)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Skeleton" (https://sketchfab.com/3d-models/skeleton-a2225b26c7b74cd5b5bbeced1170cc09) by VitSh (https://sketchfab.com/VitSh) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
